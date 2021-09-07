@@ -1,0 +1,1 @@
+from .ResourceResolver import ResourceResolver, get_resource_resolver
