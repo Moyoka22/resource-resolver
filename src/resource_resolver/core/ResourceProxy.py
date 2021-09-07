@@ -6,13 +6,13 @@ import tempfile
 from typing import IO, Literal, Union, cast
 
 from .errors import ResourceResolverError
-from .managers import TempManager, ResourceManagerBase, ManagerRegistry
+from .managers import ManagerRegistry
 
 
 class ResourceProxy:
     GET_AS_FORMATS = ['str', 'buffer', 'file_handle']
 
-    def __init__(self, location: Union[str, IO[str], Path], 
+    def __init__(self, location: Union[str, IO[str], Path],
                  read_only=False,
                  **kwargs):
         self._location = location
@@ -31,12 +31,11 @@ class ResourceProxy:
 
         if isinstance(data, str):
             data = cast(str, data)
-            data = self._produce_stream_from_data(data) 
+            data = self._produce_stream_from_data(data)
 
         data = cast(IO[str], data)
         self._manager.put(data)
 
-   
     def get(self, as_a: str) -> Union[str, IO[str], StringIO]:
         supported_formats = self.GET_AS_FORMATS
         if as_a not in supported_formats:
@@ -49,27 +48,27 @@ class ResourceProxy:
             buffer = StringIO()
             data = self._manager.get()
             shutil.copyfileobj(data, buffer)
-            buffer.seek(0,0)
+            buffer.seek(0, 0)
             return buffer
         else:
             as_a = cast(Literal['file_handle'], as_a)
             return self._manager.get()
-    
+
     @property
     def is_read_only(self) -> bool:
         return self._read_only
-    
+
     def _produce_stream_from_data(self, data: str) -> IO[str]:
-            try:
-                buffer : IO[str] = StringIO(data)
-                buffer.seek(0,0)
-            except MemoryError:
-                logging.warning('Failed to allocation memory for string. '
-                                f'String has length {len(data)}.')
-                fp = tempfile.TemporaryFile(mode="w+")
-                fp.write(data)
-                fp.seek(0,0)
-                return fp
-                
-            else:
-                return buffer
+        try:
+            buffer: IO[str] = StringIO(data)
+            buffer.seek(0, 0)
+        except MemoryError:
+            logging.warning('Failed to allocation memory for string. '
+                            f'String has length {len(data)}.')
+            fp = tempfile.TemporaryFile(mode="w+")
+            fp.write(data)
+            fp.seek(0, 0)
+            return fp
+
+        else:
+            return buffer

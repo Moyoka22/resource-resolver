@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 from typing import Any, List
@@ -35,7 +34,6 @@ class ResourceResolverError(Exception):
     def UnsupportedWriteType(cls, t: Any) -> ResourceResolverError:
         return cls(f"Cannot write type '{type(t)}'. "
                    "Only string data is supported.")
-
 
     @classmethod
     def UndefinedResource(cls, key: str) -> ResourceResolverError:
