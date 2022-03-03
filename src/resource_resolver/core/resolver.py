@@ -5,13 +5,14 @@ from pathlib import Path
 from typing import Dict, IO, Literal, Optional, Union, overload
 
 from .errors import ResourceResolverError
-from .ResourceProxy import ResourceProxy
+from .proxy import ResourceProxy
 
 instance = None
 
 
 class ResourceResolver:
-    """Resolves resources by name. Resources must be stored and retrieved
+    """
+    Resolves resources by name. Resources must be stored and retrieved
     as strings.
 
     Currently supported formats for resource:
@@ -41,15 +42,19 @@ class ResourceResolver:
     @overload
     def get(self, key: str, as_a: Literal['str']) -> str:
         ...
+
     @overload
     def get(self, key: str, as_a: Literal['buffer']) -> StringIO:
         ...
+
     @overload
     def get(self, key: str, as_a: Literal['file_handle']) -> IO[str]:
         ...
+
     @overload
     def get(self, key: str) -> str:
         ...
+
     def get(self, key: str, as_a: str = 'str'):
         """Return the requested resource as a string or string buffer."""
 
@@ -82,11 +87,12 @@ class ResourceResolver:
         if not location:
             location = f'tmp://{key}'
         self._resource_map[key] = self._create_resource_io(location,
-                                                            read_only,
+                                                           read_only,
                                                            **kwargs)
 
     def save(self, key: str, data: Union[str, IO[str]]) -> None:
-        """Saves the string or string buffer argument passed
+        """
+        Saves the string or string buffer argument passed
         to the given resource.
         """
         if not key in self._resource_map:
@@ -103,13 +109,13 @@ class ResourceResolver:
 
     def __contains__(self, key: str) -> bool:
         return key in self._resource_map
-    
+
     def __getitem__(self, key: str) -> IO[str]:
         return self.get(key, as_a='file_handle')
-       
-        
 
 
 def get_resource_resolver() -> ResourceResolver:
-    """Returns a singleton instance of the resource resolver."""
+    """
+    Returns a singleton instance of the resource resolver.
+    """
     return ResourceResolver.get_instance()

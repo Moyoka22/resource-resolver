@@ -4,8 +4,8 @@ import pandas as pd
 import pytest
 
 from resource_resolver import ResourceResolver
-from resource_resolver.resource_utils.pandas_utils import (
-    get_csv_resource_as_dataframe, save_dataframe_as_csv, append_dataframe_to_csv
+from resource_resolver.utils.pandas import (
+     append_dataframe_csv
 )
 
 
@@ -37,7 +37,7 @@ def test_append_csv_adds_rows(test_resolver, test_dataframe):
         'test_dataframe', as_a='file_handle')
     print(fh.read())
 
-    append_dataframe_to_csv('test_dataframe', test_dataframe, context=test_resolver
+    append_dataframe_csv('test_dataframe', test_dataframe, context=test_resolver
                             )
 
     fh = test_resolver.get(

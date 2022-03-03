@@ -9,3 +9,7 @@ scratch/
 
 # Ignore IDE
 .vscode/
+
+
+# Ignore logs
+*.log

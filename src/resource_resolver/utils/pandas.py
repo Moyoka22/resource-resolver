@@ -1,3 +1,6 @@
+"""
+Pandas extensions for resource resolver.
+"""
 import logging
 from pathlib import Path
 from typing import cast
